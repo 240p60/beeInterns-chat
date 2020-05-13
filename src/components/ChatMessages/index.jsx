@@ -3,6 +3,9 @@ import React from 'react';
 import './ChatMessage.scss';
 import BotAvatar from '../../img/botAvatar.svg';
 import UserAvatar from '../../img/userAvatar.svg';
+import RainImg from '../../img/rain.svg';
+import CloudImg from '../../img/cloud.svg';
+import SunImg from '../../img/sun.svg';
 
 export default function ChatMessages({ isInputFocused, messageList }) {
 
@@ -24,6 +27,12 @@ export default function ChatMessages({ isInputFocused, messageList }) {
             item.isUser ? 'yellow' : 'white'
             ].join(' ')}
         >
+          {item.img ? (
+            <img
+              src={item.img === "Rain" ? RainImg : item.img === "Clouds" ? CloudImg : SunImg}
+              alt="weather"
+            />
+          ) : ''}
           {item.text}
         </div>
       </div>

@@ -1,9 +1,4 @@
-import {useState} from 'react'
-
-import weatherApi from './WeatherApi'
-
 export default function ChatApi() {
-    const[weather, setWeather] = useState({});
     let isStart = false;
     let numbers = [];
 
@@ -15,12 +10,6 @@ export default function ChatApi() {
         } else if (/^\/name: \w+$/.test(cmd)) {
             let name = cmd.split(' ')[1];
             reply = `Привет, ${name}, приятно познакомится. Я умею считать, введи числа которые надо посчитать. Также я могу поделиться прогнозом погоды`;
-        } else if (/^\/weather: [A-Za-z\s]+$/.test(cmd)) {
-            let city = cmd.split(': ')[1];
-            weatherApi(city).then(data => setWeather({...data}));
-            setTimeout(() => console.log(weather), 5000);
-            // reply = `${weatherApi(city)}`;
-            // console.log(weatherApi(city));
         } else if (!numbers.length && /^\/number: \d+, \d+/.test(cmd)) {
             numbers = cmd.split(': ')[1].split(', ').map(item => parseInt(item));
             reply = `Введите одно из действий: -, +, *, /`;

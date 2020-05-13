@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Context } from './Context';
+
+import weatherApi from './api/WeatherApi';
 import ChatApi from './api/ChatApi';
 
-import { ChatInput, ChatButton, ChatMessages } from './components/index'
+import { ChatInput, ChatButton, ChatMessages } from './components/index';
 
 function App() {
   const [chatApi] = useState([ChatApi()]);
@@ -16,12 +18,30 @@ function App() {
   }, []);
 
   const sendCommand = command => {
-		const response = chatApi[0](command);
-		messageListSet([
-      { text: response, id: [messageList.length + 2], isUser: false },
-      { text: command, id: [messageList.length + 1], isUser: true },
-			...messageList
-    ]);
+    let response;
+
+    if (/^\/weather: [A-Za-z\s]+$/.test(command)) {
+      let city = command.split(': ')[1];
+      weatherApi(city).then(data => {
+        response = data ? `Погода в "${city}": ${data.weather[0].main} (${data.weather[0].description})` : `Города ${city} не существует`;
+        messageListSet([
+          { 
+            text: response,
+            id: [messageList.length + 2],
+            isUser: false,
+            img: data ? data.weather[0].main : false },
+          { text: command, id: [messageList.length + 1], isUser: true },
+          ...messageList
+        ]);
+      });
+    } else {
+      response = chatApi[0](command);
+      messageListSet([
+        { text: response, id: [messageList.length + 2], isUser: false },
+        { text: command, id: [messageList.length + 1], isUser: true },
+        ...messageList
+      ]);
+    }
   };
   
   const whenButtonClick = (e) => {
